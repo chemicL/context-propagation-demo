@@ -22,12 +22,9 @@ public class WebClientController {
 	private static final Logger log = LoggerFactory.getLogger(WebClientController.class);
 
 	private final WebClient webClient;
-	private final ObservationRegistry observationRegistry;
 
-	public WebClientController(WebClient.Builder webClientBuilder,
-			ObservationRegistry observationRegistry) {
+	public WebClientController(WebClient.Builder webClientBuilder) {
 		this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8000/").build();
-		this.observationRegistry = observationRegistry;
 	}
 
 	@GetMapping("/webClient")
@@ -38,19 +35,8 @@ public class WebClientController {
 		                .uri("/HELP.md")
 		                .retrieve()
 		                .toEntity(String.class)
-		                .mapNotNull(ResponseEntity::getBody)
-		                .flatMapMany(b -> Flux.fromStream(b.lines()))
-		                .flatMap(line -> Mono.just(line)
-		                                     .<String>handle((l, s) -> {
-			                                     log.info("Next line: {}", l);
-			                                     s.next(l);
-		                                     })
-		                                     .tap(Micrometer.observation(
-				                                     observationRegistry)))
-		                .last()
-//		                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
-//		                .mapNotNull(HttpEntity::getBody)
-                        .contextCapture()
+		                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
+		                .mapNotNull(HttpEntity::getBody)
                         .block();
 	}
 }
