@@ -1,18 +1,12 @@
 package io.projectreactor.contextpropagationdemo;
 
-import io.micrometer.observation.Observation;
-import io.micrometer.observation.ObservationRegistry;
-import io.micrometer.observation.contextpropagation.ObservationThreadLocalAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import reactor.core.observability.micrometer.Micrometer;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -28,8 +22,8 @@ public class WebClientController {
 	}
 
 	@GetMapping("/webClient")
-	String webClient() {
-		MDC.put("cid", "correlation");
+	String webClient(@RequestParam String name) {
+		MDC.put("cid", name);
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")
