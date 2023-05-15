@@ -39,6 +39,7 @@ public class WebClientController {
 			                // [CHANGE] contextCapture() -> contextWrite()
 			                .contextCapture(); // TODO: Can we avoid writing to MDC and
 											   //       immediately reading the value?
+							// [CHANGE] Not calling block()
 		})
 				// TODO: Can the outer Mono's (defer) Context be used?
 				;

@@ -5,13 +5,11 @@ import java.util.function.Function;
 import io.micrometer.observation.ObservationRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import reactor.core.observability.micrometer.Micrometer;
 import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -33,8 +31,10 @@ public class WebClientController {
 	}
 
 	@GetMapping("/webClient")
-	String webClient(@RequestParam String name) {
-		MDC.put("cid", name);
+	// [CHANGE] No more "name" param
+	String webClient() {
+		// [CHANGE] No more "cid"
+//		MDC.put("cid", name);
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")
