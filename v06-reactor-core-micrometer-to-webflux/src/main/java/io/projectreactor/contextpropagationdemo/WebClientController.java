@@ -50,8 +50,7 @@ public class WebClientController {
 			                .collect(StringBuilder::new,
 					                (sb, line) -> sb.append(line)
 					                                .append("\n"))
-			                .map(StringBuilder::toString)
-			                .contextCapture(); // TODO: Is this needed?
+			                .map(StringBuilder::toString);
 							// [CHANGE] not calling .block()
 		});
 	}
