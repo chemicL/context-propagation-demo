@@ -2,5 +2,5 @@ rootProject.name = 'context-propagation-demo'
 include 'v01-basic'
 include 'v02-add-context-propagation'
 include 'v03-migrate-to-webflux'
-include 'v04-revert-to-mdc-use-observation'
-
+include 'v04-revert-to-mvc-use-observation'
+include 'v05-reactor-core-micrometer'

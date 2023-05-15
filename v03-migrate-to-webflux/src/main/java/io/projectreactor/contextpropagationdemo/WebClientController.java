@@ -26,9 +26,9 @@ public class WebClientController {
 
 	@GetMapping("/webClient")
 	Mono<String> webClient(@RequestParam String name) {
-		// [CHANGE] returning Mono instead of calling imperative code
+		// [CHANGE] Returning Mono instead of calling imperative code
 		return Mono.defer(() -> {
-			MDC.put("cid", name); // <>
+			MDC.put("cid", name); // TODO: Do we need to write to MDC and capture?
 			log.info("webClient endpoint called");
 			return webClient.get()
 			                .uri("/HELP.md")
@@ -37,9 +37,10 @@ public class WebClientController {
 			                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
 			                .mapNotNull(HttpEntity::getBody)
 			                // [CHANGE] contextCapture() -> contextWrite()
-			                .contextCapture(); // <>
+			                .contextCapture(); // TODO: Can we avoid writing to MDC and
+											   //       immediately reading the value?
 		})
-				// <>
+				// TODO: Can the outer Mono's (defer) Context be used?
 				;
 	}
 }

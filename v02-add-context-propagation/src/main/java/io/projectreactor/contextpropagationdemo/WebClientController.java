@@ -36,8 +36,10 @@ public class WebClientController {
 							log.info("Response status: {}", entity.getStatusCode());
 							sink.next(entity);
 		                })
+		                // TODO: How to be able to correlate logs outside of
+		                //  handle/tap? For example, in doOnNext()
 		                .mapNotNull(HttpEntity::getBody)
-		                // <>
+		                // TODO: what's missing?
                         .block();
 	}
 }

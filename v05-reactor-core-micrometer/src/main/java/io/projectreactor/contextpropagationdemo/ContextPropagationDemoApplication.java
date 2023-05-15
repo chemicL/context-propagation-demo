@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ContextPropagationDemoApplication {
 
 	public static void main(String[] args) {
-		// [CHANGE] Disabled automatic context propagation
 		ContextRegistry.getInstance().registerThreadLocalAccessor(
 				"cid",
 				() -> MDC.get("cid"),
