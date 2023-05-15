@@ -33,12 +33,7 @@ public class WebClientController {
 			                .retrieve()
 			                .toEntity(String.class)
 			                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
-			                .mapNotNull(HttpEntity::getBody)
-			                .contextCapture(); // TODO: Can we avoid writing to MDC and
-											   //       immediately reading the value?
-							// [CHANGE] Not calling block()
-		})
-				// TODO: Can the outer Mono's (defer) Context be used?
-				;
+			                .mapNotNull(HttpEntity::getBody);
+		});
 	}
 }
