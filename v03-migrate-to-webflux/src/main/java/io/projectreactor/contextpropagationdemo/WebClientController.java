@@ -36,7 +36,6 @@ public class WebClientController {
 			                .toEntity(String.class)
 			                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
 			                .mapNotNull(HttpEntity::getBody)
-			                // [CHANGE] contextCapture() -> contextWrite()
 			                .contextCapture(); // TODO: Can we avoid writing to MDC and
 											   //       immediately reading the value?
 							// [CHANGE] Not calling block()

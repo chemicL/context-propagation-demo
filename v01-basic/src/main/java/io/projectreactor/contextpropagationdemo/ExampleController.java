@@ -15,7 +15,6 @@ public class ExampleController {
 
 	@GetMapping("/hello")
 	String hello(@RequestParam String name) {
-		MDC.put("cid", name);
 		log.info("hello endpoint called");
 		return "Hello, " + name + "!";
 	}

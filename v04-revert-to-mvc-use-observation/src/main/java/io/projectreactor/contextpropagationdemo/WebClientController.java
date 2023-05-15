@@ -2,9 +2,6 @@ package io.projectreactor.contextpropagationdemo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import reactor.core.publisher.Mono;
-import reactor.util.context.Context;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +26,7 @@ public class WebClientController {
 	// [CHANGE] Back to String. However, MVC also handles Mono/Flux signatures!
 	String webClient(@RequestParam String name) {
 		// [CHANGE] Back to imperative code
-		MDC.put("cid", name);
+		// [CHANGE] No more "cid"
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")

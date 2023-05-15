@@ -24,7 +24,6 @@ public class WebClientController {
 
 	@GetMapping("/webClient")
 	String webClient(@RequestParam String name) {
-		MDC.put("cid", name);
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")

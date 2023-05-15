@@ -33,8 +33,6 @@ public class WebClientController {
 	@GetMapping("/webClient")
 	// [CHANGE] No more "name" param
 	String webClient() {
-		// [CHANGE] No more "cid"
-//		MDC.put("cid", name);
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")

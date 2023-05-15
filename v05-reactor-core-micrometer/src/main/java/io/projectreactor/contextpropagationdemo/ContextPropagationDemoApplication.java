@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ContextPropagationDemoApplication {
 
 	public static void main(String[] args) {
-		// [CHANGE] No more correlation ID ("cid") accessor
 		SpringApplication.run(ContextPropagationDemoApplication.class, args);
 	}
 
