@@ -52,8 +52,7 @@ public class WebClientController {
 						)
 						.collect(StringBuilder::new, (sb, line) -> sb.append(line).append("\n"))
 						.map(StringBuilder::toString)
-		                // [CHANGE] Removed contextCapture
-		                // TODO: is it needed?
+						.contextCapture()
 		                .block();
 	}
 }
