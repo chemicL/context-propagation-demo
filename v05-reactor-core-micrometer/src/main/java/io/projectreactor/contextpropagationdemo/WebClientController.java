@@ -1,6 +1,6 @@
 package io.projectreactor.contextpropagationdemo;
 
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.micrometer.observation.ObservationRegistry;
 import org.slf4j.Logger;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import reactor.core.observability.micrometer.Micrometer;
 import reactor.core.publisher.Mono;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,18 +30,14 @@ public class WebClientController {
 	}
 
 	@GetMapping("/webClient")
-	// [CHANGE] No more "name" param
 	String webClient() {
 		log.info("webClient endpoint called");
 		return webClient.get()
 		                .uri("/HELP.md")
 		                .retrieve()
-		                // [CHANGE] toEntity -> toEntityFlux to get Flux of lines
-		                .toEntityFlux(String.class)
+		                // [CHANGE] toEntity -> toFlux to get Flux of lines
+		                .bodyToFlux(String.class)
 		                // [CHANGE] Moved logging to flatMap below
-		                .mapNotNull(HttpEntity::getBody)
-		                // [CHANGE] Extracting the Flux<String>
-		                .flatMapMany(Function.identity())
 		                // [CHANGE] Apply Observation for each line
 						.flatMap(line -> Mono.just(line)
 								.<String>handle((l, s) -> {
@@ -50,8 +45,7 @@ public class WebClientController {
 									s.next(l);
 								}).tap(Micrometer.observation(observationRegistry))
 						)
-						.collect(StringBuilder::new, (sb, line) -> sb.append(line).append("\n"))
-						.map(StringBuilder::toString)
+						.collect(Collectors.joining("\n"))
 						.contextCapture()
 		                .block();
 	}

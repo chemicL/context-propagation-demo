@@ -1,6 +1,6 @@
 package io.projectreactor.contextpropagationdemo;
 
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.micrometer.observation.ObservationRegistry;
 import org.slf4j.Logger;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import reactor.core.observability.micrometer.Micrometer;
 import reactor.core.publisher.Mono;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,9 +36,7 @@ public class WebClientController {
 			return webClient.get()
 			                .uri("/HELP.md")
 			                .retrieve()
-			                .toEntityFlux(String.class)
-			                .mapNotNull(HttpEntity::getBody)
-			                .flatMapMany(Function.identity())
+			                .bodyToFlux(String.class)
 			                .flatMap(line -> Mono.just(line)
 			                                     .<String>handle((l, s) -> {
 				                                     log.info("Next line: {}", l);
@@ -47,10 +44,7 @@ public class WebClientController {
 			                                     })
 			                                     .tap(Micrometer.observation(
 					                                     observationRegistry)))
-			                .collect(StringBuilder::new,
-					                (sb, line) -> sb.append(line)
-					                                .append("\n"))
-			                .map(StringBuilder::toString);
+			                .collect(Collectors.joining("\n"));
 							// [CHANGE] not calling .block()
 		});
 	}
