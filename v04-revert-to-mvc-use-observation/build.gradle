@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     // [CHANGE] Restore the -web dependency
+    // TODO: Try removing it, refreshing, and run as a WebFlux application
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     // [CHANGE] Remove context-propagation explicit import, it is part of the bridge

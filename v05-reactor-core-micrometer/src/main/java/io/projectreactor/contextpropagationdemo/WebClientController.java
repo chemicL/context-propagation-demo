@@ -46,7 +46,25 @@ public class WebClientController {
 								}).tap(Micrometer.observation(observationRegistry))
 						)
 						.collect(Collectors.joining("\n"))
-						.contextCapture()
 		                .block();
+	}
+
+	@GetMapping("/webClientReactive")
+	Mono<String> webClientReactive() {
+		log.info("webClient endpoint called");
+		return webClient.get()
+		                .uri("/HELP.md")
+		                .retrieve()
+		                // [CHANGE] toEntity -> bodyToFlux to get Flux of lines
+		                .bodyToFlux(String.class)
+		                // [CHANGE] Moved logging to flatMap below
+		                // [CHANGE] Apply Observation for each line
+		                .flatMap(line -> Mono.just(line)
+		                                     .<String>handle((l, s) -> {
+			                                     log.info("Next line: {}", l);
+			                                     s.next(l);
+		                                     }).tap(Micrometer.observation(observationRegistry))
+		                )
+		                .collect(Collectors.joining("\n"));
 	}
 }

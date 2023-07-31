@@ -2,6 +2,7 @@ package io.projectreactor.contextpropagationdemo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class WebClientController {
 	}
 
 	@GetMapping("/webClient")
-	// [CHANGE] Back to String. However, MVC also handles Mono/Flux signatures!
+	// [CHANGE] Back to String. However, MVC also handles Mono/Flux signatures! (below)
 	// [CHANGE] No more "name" param
 	String webClient() {
 		// [CHANGE] Back to imperative code
@@ -33,14 +34,21 @@ public class WebClientController {
 		                .uri("/HELP.md")
 		                .retrieve()
 		                .toEntity(String.class)
-		                // [CHANGE] No automatic context propagation, using handle
-		                .<ResponseEntity<String>>handle(((entity, sink) -> {
-			                log.info("Response status: {}", entity.getStatusCode());
-			                sink.next(entity);
-		                }))
+		                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
 		                .mapNotNull(HttpEntity::getBody)
-		                // [CHANGE] Back to contextCapture()
-		                .contextCapture()
+		                // [CHANGE] calling block, which automatically captures
 		                .block();
+	}
+
+	@GetMapping("/webClientReactive")
+	Mono<String> webClientReactive() {
+		log.info("webClient endpoint called");
+		return webClient.get()
+		                .uri("/HELP.md")
+		                .retrieve()
+		                .toEntity(String.class)
+		                .doOnNext(entity -> log.info("Response status: {}", entity.getStatusCode()))
+		                .mapNotNull(HttpEntity::getBody);
+		                // not calling block in reactive endpoints
 	}
 }

@@ -35,7 +35,6 @@ public class WebClientController {
 							sink.next(entity);
 		                })
 		                .mapNotNull(HttpEntity::getBody)
-		                .contextCapture()
                         .block();
 	}
 }
