@@ -24,7 +24,8 @@ public class WebClientController {
 
 	@GetMapping("/webClient")
 	// [CHANGE] Back to String. However, MVC also handles Mono/Flux signatures!
-	String webClient(@RequestParam String name) {
+	// [CHANGE] No more "name" param
+	String webClient() {
 		// [CHANGE] Back to imperative code
 		// [CHANGE] No more "cid"
 		log.info("webClient endpoint called");
