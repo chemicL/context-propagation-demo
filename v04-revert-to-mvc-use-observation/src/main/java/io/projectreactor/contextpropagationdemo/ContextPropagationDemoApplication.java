@@ -1,5 +1,7 @@
 package io.projectreactor.contextpropagationdemo;
 
+import reactor.core.publisher.Hooks;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ContextPropagationDemoApplication {
 
 	public static void main(String[] args) {
-		// [CHANGE] Disabled automatic context propagation
+		Hooks.enableAutomaticContextPropagation();
 		// [CHANGE] No more correlation ID ("cid") accessor
 		SpringApplication.run(ContextPropagationDemoApplication.class, args);
 	}
