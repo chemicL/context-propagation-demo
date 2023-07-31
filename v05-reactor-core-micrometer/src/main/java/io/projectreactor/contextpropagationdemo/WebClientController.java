@@ -35,7 +35,7 @@ public class WebClientController {
 		return webClient.get()
 		                .uri("/HELP.md")
 		                .retrieve()
-		                // [CHANGE] toEntity -> toFlux to get Flux of lines
+		                // [CHANGE] toEntity -> bodyToFlux to get Flux of lines
 		                .bodyToFlux(String.class)
 		                // [CHANGE] Moved logging to flatMap below
 		                // [CHANGE] Apply Observation for each line
