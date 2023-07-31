@@ -3,6 +3,7 @@ package io.projectreactor.contextpropagationdemo;
 import io.micrometer.context.ContextRegistry;
 import jakarta.servlet.Filter;
 import org.slf4j.MDC;
+import reactor.core.publisher.Hooks;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +13,8 @@ import org.springframework.context.annotation.Bean;
 public class ContextPropagationDemoApplication {
 
 	public static void main(String[] args) {
-		// TODO
+		// TODO: How to get operators other than handle/tap to log properly?
+
 		// [CHANGE] Added accessor:
 		ContextRegistry.getInstance().registerThreadLocalAccessor(
 				"cid",
@@ -25,11 +27,15 @@ public class ContextPropagationDemoApplication {
 	@Bean
 	Filter correlationFilter() {
 		return (request, response, chain) -> {
-			String name = request.getParameter("name");
-			if (name != null) {
-				MDC.put("cid", name);
+			try {
+				String name = request.getParameter("name");
+				if (name != null) {
+					MDC.put("cid", name);
+				}
+				chain.doFilter(request, response);
+			} finally {
+				MDC.remove("cid");
 			}
-			chain.doFilter(request, response);
 		};
 	}
 }

@@ -17,11 +17,15 @@ public class ContextPropagationDemoApplication {
 	@Bean
 	Filter correlationFilter() {
 		return (request, response, chain) -> {
-			String name = request.getParameter("name");
-			if (name != null) {
-				MDC.put("cid", name);
+			try {
+				String name = request.getParameter("name");
+				if (name != null) {
+					MDC.put("cid", name);
+				}
+				chain.doFilter(request, response);
+			} finally {
+				MDC.remove("cid");
 			}
-			chain.doFilter(request, response);
 		};
 	}
 

@@ -3,9 +3,12 @@ package io.projectreactor.contextpropagationdemo;
 import io.micrometer.context.ContextRegistry;
 import org.slf4j.MDC;
 import reactor.core.publisher.Hooks;
+import reactor.util.context.Context;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.server.WebFilter;
 
 @SpringBootApplication
 public class ContextPropagationDemoApplication {
