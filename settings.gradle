@@ -1,4 +1,5 @@
 rootProject.name = 'context-propagation-demo'
+include 'log-correlation'
 include 'v01-basic'
 include 'v02-add-context-propagation'
 include 'v03-migrate-to-webflux'
